@@ -1891,6 +1891,7 @@ System.register([], function(exports_1) {
                             }
                         });
                         var data_object_array = mainline_keyframe1.object_ref_array;
+                        var data_object_array2 = mainline_keyframe1.object_ref_array;
                         var pose_object_array_1 = pose.object_array;
                         data_object_array.forEach(function (data_object, object_index) {
                             var timeline_index = data_object.timeline_index;
@@ -1910,12 +1911,25 @@ System.register([], function(exports_1) {
                                 pct = (mainline_time_1 - time1) / (time2 - time1);
                                 pct = timeline_keyframe1.curve.evaluate(pct);
                             }
+                            let isTween = true;
+                            if(time2 > mainline_time2) {              
+                                isTween = false;  
+                                for(let k = 0; k < data_object_array2.length;k++) {
+                                    let obj = data_object_array2[k];
+                                    if(obj.timeline_index === timeline_index){
+                                        isTween = true;
+                                        break;
+                                    }
+                                }                
+                            }
                             switch (timeline.type) {
                                 case 'sprite':
                                     var pose_sprite = (pose_object_array_1[object_index] = (pose_object_array_1[object_index] || new SpriteObject()));
                                     var sprite_timeline_keyframe1 = timeline_keyframe1;
                                     var sprite_timeline_keyframe2 = timeline_keyframe2;
-                                    pose_sprite.copy(sprite_timeline_keyframe1.sprite).tween(sprite_timeline_keyframe2.sprite, pct, timeline_keyframe1.spin);
+                                    pose_sprite.copy(sprite_timeline_keyframe1.sprite);
+                                    if(isTween)
+                                        pose_sprite.tween(sprite_timeline_keyframe2.sprite, pct, timeline_keyframe1.spin);
                                     pose_sprite.name = timeline.name;
                                     pose_sprite.parent_index = data_object.parent_index;
                                     break;
@@ -1923,7 +1937,9 @@ System.register([], function(exports_1) {
                                     var pose_bone = (pose_object_array_1[object_index] = (pose_object_array_1[object_index] || new Bone()));
                                     var bone_timeline_keyframe1 = timeline_keyframe1;
                                     var bone_timeline_keyframe2 = timeline_keyframe2;
-                                    pose_bone.copy(bone_timeline_keyframe1.bone).tween(bone_timeline_keyframe2.bone, pct, timeline_keyframe1.spin);
+                                    pose_bone.copy(bone_timeline_keyframe1.bone);
+                                    if(isTween)
+                                        pose_bone.tween(bone_timeline_keyframe2.bone, pct, timeline_keyframe1.spin);
                                     pose_bone.name = timeline.name;
                                     pose_bone.parent_index = data_object.parent_index;
                                     break;
@@ -1931,7 +1947,9 @@ System.register([], function(exports_1) {
                                     var pose_box = (pose_object_array_1[object_index] = (pose_object_array_1[object_index] || new BoxObject()));
                                     var box_timeline_keyframe1 = timeline_keyframe1;
                                     var box_timeline_keyframe2 = timeline_keyframe2;
-                                    pose_box.copy(box_timeline_keyframe1.box).tween(box_timeline_keyframe2.box, pct, timeline_keyframe1.spin);
+                                    pose_box.copy(box_timeline_keyframe1.box);
+                                    if(isTween) 
+                                        pose_box.tween(box_timeline_keyframe2.box, pct, timeline_keyframe1.spin);
                                     pose_box.name = timeline.name;
                                     pose_box.parent_index = data_object.parent_index;
                                     break;
@@ -1939,7 +1957,9 @@ System.register([], function(exports_1) {
                                     var pose_point = (pose_object_array_1[object_index] = (pose_object_array_1[object_index] || new PointObject()));
                                     var point_timeline_keyframe1 = timeline_keyframe1;
                                     var point_timeline_keyframe2 = timeline_keyframe2;
-                                    pose_point.copy(point_timeline_keyframe1.point).tween(point_timeline_keyframe2.point, pct, timeline_keyframe1.spin);
+                                    pose_point.copy(point_timeline_keyframe1.point);
+                                    if(isTween) 
+                                        pose_point.tween(point_timeline_keyframe2.point, pct, timeline_keyframe1.spin);
                                     pose_point.name = timeline.name;
                                     pose_point.parent_index = data_object.parent_index;
                                     break;
@@ -1947,14 +1967,18 @@ System.register([], function(exports_1) {
                                     var pose_sound = (pose_object_array_1[object_index] = (pose_object_array_1[object_index] || new SoundObject()));
                                     var sound_timeline_keyframe1 = timeline_keyframe1;
                                     var sound_timeline_keyframe2 = timeline_keyframe2;
-                                    pose_sound.copy(sound_timeline_keyframe1.sound).tween(sound_timeline_keyframe2.sound, pct, timeline_keyframe1.spin);
+                                    pose_sound.copy(sound_timeline_keyframe1.sound)
+                                    if(isTween) 
+                                        pose_sound.tween(sound_timeline_keyframe2.sound, pct, timeline_keyframe1.spin);
                                     pose_sound.name = timeline.name;
                                     break;
                                 case 'entity':
                                     var pose_entity = (pose_object_array_1[object_index] = (pose_object_array_1[object_index] || new EntityObject()));
                                     var entity_timeline_keyframe1 = timeline_keyframe1;
                                     var entity_timeline_keyframe2 = timeline_keyframe2;
-                                    pose_entity.copy(entity_timeline_keyframe1.entity).tween(entity_timeline_keyframe2.entity, pct, timeline_keyframe1.spin);
+                                    pose_entity.copy(entity_timeline_keyframe1.entity);
+                                    if(isTween)
+                                        pose_entity.tween(entity_timeline_keyframe2.entity, pct, timeline_keyframe1.spin);
                                     pose_entity.name = timeline.name;
                                     pose_entity.parent_index = data_object.parent_index;
                                     break;
@@ -1963,7 +1987,9 @@ System.register([], function(exports_1) {
                                     var variable_timeline_keyframe1 = timeline_keyframe1;
                                     var variable_timeline_keyframe2 = timeline_keyframe2;
                                     pose_variable.name = timeline.name;
-                                    pose_variable.copy(variable_timeline_keyframe1.variable).tween(variable_timeline_keyframe2.variable, pct, timeline_keyframe1.spin);
+                                    pose_variable.copy(variable_timeline_keyframe1.variable);
+                                    if(isTween) 
+                                        pose_variable.tween(variable_timeline_keyframe2.variable, pct, timeline_keyframe1.spin);
                                     break;
                                 default:
                                     throw new Error(timeline.type);

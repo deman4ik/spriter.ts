@@ -1740,6 +1740,7 @@ export class Pose {
       });
 
       const data_object_array = mainline_keyframe1.object_ref_array;
+      const data_object_array2 = mainline_keyframe2.object_ref_array;
       const pose_object_array = pose.object_array;
 
       data_object_array.forEach(function(data_object, object_index) {
@@ -1758,13 +1759,26 @@ export class Pose {
           pct = (mainline_time - time1) / (time2 - time1);
           pct = timeline_keyframe1.curve.evaluate(pct);
         }
-
+        let isTween = true;
+        if(time2 > mainline_time2) {              
+            isTween = false;  
+            for(let k = 0; k < data_object_array2.length;k++) {
+                let obj = data_object_array2[k];
+                if(obj.timeline_index == timeline_index){
+                    isTween = true;
+                    break;
+                }
+            }                
+        }
+                        
         switch (timeline.type) {
         case 'sprite':
           const pose_sprite = <SpriteObject>(pose_object_array[object_index] = (pose_object_array[object_index] || new SpriteObject()));
           const sprite_timeline_keyframe1 = <SpriteTimelineKeyframe>timeline_keyframe1;
           const sprite_timeline_keyframe2 = <SpriteTimelineKeyframe>timeline_keyframe2;
-          pose_sprite.copy(sprite_timeline_keyframe1.sprite).tween(sprite_timeline_keyframe2.sprite, pct, timeline_keyframe1.spin);
+          pose_sprite.copy(sprite_timeline_keyframe1.sprite);
+          if(isTween)
+            pose_sprite.tween(sprite_timeline_keyframe2.sprite, pct, timeline_keyframe1.spin);
           pose_sprite.name = timeline.name; // set name from timeline
           pose_sprite.parent_index = data_object.parent_index; // set parent from object_ref
           break;
@@ -1772,7 +1786,9 @@ export class Pose {
           const pose_bone = <Bone>(pose_object_array[object_index] = (pose_object_array[object_index] || new Bone()));
           const bone_timeline_keyframe1 = <BoneTimelineKeyframe>timeline_keyframe1;
           const bone_timeline_keyframe2 = <BoneTimelineKeyframe>timeline_keyframe2;
-          pose_bone.copy(bone_timeline_keyframe1.bone).tween(bone_timeline_keyframe2.bone, pct, timeline_keyframe1.spin);
+          pose_bone.copy(bone_timeline_keyframe1.bone);
+          if(isTween)
+            pose_bone.tween(bone_timeline_keyframe2.bone, pct, timeline_keyframe1.spin);
           pose_bone.name = timeline.name; // set name from timeline
           pose_bone.parent_index = data_object.parent_index; // set parent from object_ref
           break;
@@ -1780,7 +1796,9 @@ export class Pose {
           const pose_box = <BoxObject>(pose_object_array[object_index] = (pose_object_array[object_index] || new BoxObject()));
           const box_timeline_keyframe1 = <BoxTimelineKeyframe>timeline_keyframe1;
           const box_timeline_keyframe2 = <BoxTimelineKeyframe>timeline_keyframe2;
-          pose_box.copy(box_timeline_keyframe1.box).tween(box_timeline_keyframe2.box, pct, timeline_keyframe1.spin);
+          pose_box.copy(box_timeline_keyframe1.box);
+          if(isTween)
+            pose_box.tween(box_timeline_keyframe2.box, pct, timeline_keyframe1.spin);
           pose_box.name = timeline.name; // set name from timeline
           pose_box.parent_index = data_object.parent_index; // set parent from object_ref
           break;
@@ -1788,7 +1806,9 @@ export class Pose {
           const pose_point = <PointObject>(pose_object_array[object_index] = (pose_object_array[object_index] || new PointObject()));
           const point_timeline_keyframe1 = <PointTimelineKeyframe>timeline_keyframe1;
           const point_timeline_keyframe2 = <PointTimelineKeyframe>timeline_keyframe2;
-          pose_point.copy(point_timeline_keyframe1.point).tween(point_timeline_keyframe2.point, pct, timeline_keyframe1.spin);
+          pose_point.copy(point_timeline_keyframe1.point);
+          if(isTween)
+            pose_point.tween(point_timeline_keyframe2.point, pct, timeline_keyframe1.spin);
           pose_point.name = timeline.name;
           pose_point.parent_index = data_object.parent_index; // set parent from object_ref
           break;
@@ -1796,14 +1816,18 @@ export class Pose {
           const pose_sound = <SoundObject>(pose_object_array[object_index] = (pose_object_array[object_index] || new SoundObject()));
           const sound_timeline_keyframe1 = <SoundTimelineKeyframe>timeline_keyframe1;
           const sound_timeline_keyframe2 = <SoundTimelineKeyframe>timeline_keyframe2;
-          pose_sound.copy(sound_timeline_keyframe1.sound).tween(sound_timeline_keyframe2.sound, pct, timeline_keyframe1.spin);
+          pose_sound.copy(sound_timeline_keyframe1.sound);
+          if(isTween)
+            pose_sound.tween(sound_timeline_keyframe2.sound, pct, timeline_keyframe1.spin);
           pose_sound.name = timeline.name;
           break;
         case 'entity':
           const pose_entity = <EntityObject>(pose_object_array[object_index] = (pose_object_array[object_index] || new EntityObject()));
           const entity_timeline_keyframe1 = <EntityTimelineKeyframe>timeline_keyframe1;
           const entity_timeline_keyframe2 = <EntityTimelineKeyframe>timeline_keyframe2;
-          pose_entity.copy(entity_timeline_keyframe1.entity).tween(entity_timeline_keyframe2.entity, pct, timeline_keyframe1.spin);
+          pose_entity.copy(entity_timeline_keyframe1.entity);
+          if(isTween)
+            pose_entity.tween(entity_timeline_keyframe2.entity, pct, timeline_keyframe1.spin);
           pose_entity.name = timeline.name;
           pose_entity.parent_index = data_object.parent_index; // set parent from object_ref
           break;
@@ -1812,7 +1836,9 @@ export class Pose {
           const variable_timeline_keyframe1 = <VariableTimelineKeyframe>timeline_keyframe1;
           const variable_timeline_keyframe2 = <VariableTimelineKeyframe>timeline_keyframe2;
           pose_variable.name = timeline.name;
-          pose_variable.copy(variable_timeline_keyframe1.variable).tween(variable_timeline_keyframe2.variable, pct, timeline_keyframe1.spin);
+          pose_variable.copy(variable_timeline_keyframe1.variable);
+          if(isTween)
+            pose_variable.tween(variable_timeline_keyframe2.variable, pct, timeline_keyframe1.spin);
           break;
         default:
           throw new Error(timeline.type);
